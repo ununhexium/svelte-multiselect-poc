@@ -16,16 +16,28 @@
   ]
 
   let mouseDown: boolean = false;
+  let mouseDownIndex: number;
   let mouseDownState: boolean = false;
 
   const doMouseEnter = (i: number) => {
     console.log("Enter", i)
     if (mouseDown) {
+      let min = Math.min(i, mouseDownIndex);
+      let max = Math.max(i, mouseDownIndex);
+
+      fields = fields.map((it, index) => {
+        if(index >= min && index <= max) {
+          return {...it, status: mouseDownState}
+        }else{
+          return it
+        }
+      })
       fields[i].status = mouseDownState;
     }
   }
 
   const doMouseDown = (i: number) => {
+    mouseDownIndex = i;
     mouseDownState = !fields[i].status;
     fields[i].status = mouseDownState
     mouseDown = true;
@@ -50,9 +62,7 @@
 
   <p>Try to click and drag</p>
 
-  <button on:click={doReset}>Reset</button>
-
-  <h2>Minimalist</h2>
+  <h2>Minimalist <button on:click={doReset}>↺</button></h2>
 
   <fieldset>
     {#each fields as {name, status}, i}
@@ -68,7 +78,7 @@
     {/each}
   </fieldset>
 
-  <h2>Checkbox</h2>
+  <h2>Checkbox <button on:click={doReset}>↺</button></h2>
 
   <fieldset>
     {#each fields as {name, status}, i}
