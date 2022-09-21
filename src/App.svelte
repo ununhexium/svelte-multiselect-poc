@@ -26,9 +26,9 @@
       let max = Math.max(i, mouseDownIndex);
 
       fields = fields.map((it, index) => {
-        if(index >= min && index <= max) {
+        if (index >= min && index <= max) {
           return {...it, status: mouseDownState}
-        }else{
+        } else {
           return it
         }
       })
@@ -62,7 +62,9 @@
 
   <p>Try to click and drag</p>
 
-  <h2>Minimalist <button on:click={doReset}>↺</button></h2>
+  <h2>Minimalist
+    <button on:click={doReset}>↺</button>
+  </h2>
 
   <fieldset>
     {#each fields as {name, status}, i}
@@ -78,7 +80,9 @@
     {/each}
   </fieldset>
 
-  <h2>Checkbox <button on:click={doReset}>↺</button></h2>
+  <h2>Checkbox
+    <button on:click={doReset}>↺</button>
+  </h2>
 
   <fieldset>
     {#each fields as {name, status}, i}
@@ -94,27 +98,38 @@
     {/each}
   </fieldset>
 
-  <h2>Indicator <button on:click={doReset}>↺</button></h2>
+  <h2>Indicator
+    <button on:click={doReset}>↺</button>
+  </h2>
 
-  <fieldset>
-    {#each fields as {name, status}, i}
-      {#if status}
-        <div class="tooltip on" on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
-          <p >☑ {name}</p>
-          <span class="tooltiptext">Click and drag for multi select</span>
-        </div>
-      {:else}
-        <div class="tooltip" on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
-          <p >☐ {name}</p>
-          <span class="tooltiptext">Click and drag for multi select</span>
-        </div>
-      {/if}
-    {/each}
+  <fieldset style="display: flex;">
+    <div class="drag-tip">
+      <p>← Click and drag to select multiple →</p>
+    </div>
+    <div style="display: inline;">
+      {#each fields as {name, status}, i}
+        {#if status}
+          <div class="tooltip on" on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
+            <p>☑ {name}</p>
+            <span class="tooltiptext">Click and drag for multi select</span>
+          </div>
+        {:else}
+          <div class="tooltip" on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
+            <p>☐ {name}</p>
+            <span class="tooltiptext">Click and drag for multi select</span>
+          </div>
+        {/if}
+      {/each}
+    </div>
   </fieldset>
 
 </main>
 
 <style>
+  div {
+    cursor: ns-resize;
+  }
+
   fieldset {
     margin-bottom: 10px;
   }
@@ -130,6 +145,13 @@
 
   .on {
     background-color: #ddf;
+  }
+
+  .drag-tip {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    text-align: center;
+    color:gray;
   }
 
   /* Tooltip container */
