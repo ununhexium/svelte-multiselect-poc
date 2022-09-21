@@ -1,30 +1,31 @@
 <script lang="ts">
-  interface Named {
+
+  interface NamedOption {
     name: string
-    status: string
+    status: boolean
   }
 
-  let fields = [
-    {name: "Aaaa aaa aaa", status: false},
-    {name: "Bbbb bbb bbb", status: false},
-    {name: "Cccc ccc ccc", status: true},
-    {name: "Dddd ddd ddd", status: false},
-    {name: "Eeee eee eee", status: false},
-    {name: "Ffff fff fff", status: false},
-    {name: "Gggg ggg ggg", status: false},
+  let fields: NamedOption[] = [
+    {name: "Übernachtung", status: false} as NamedOption,
+    {name: "Halbpension", status: false} as NamedOption,
+    {name: "Halbpension plus", status: false} as NamedOption,
+    {name: "Vollpension", status: false} as NamedOption,
+    {name: "Vollpension plus", status: false} as NamedOption,
+    {name: "All Inklusive", status: false} as NamedOption,
+    {name: "All Inklusive plus", status: false} as NamedOption,
   ]
 
-  let mouseDown : boolean = false;
-  let mouseDownState : boolean = false;
+  let mouseDown: boolean = false;
+  let mouseDownState: boolean = false;
 
-  const doMouseEnter = (i:number) => {
+  const doMouseEnter = (i: number) => {
     console.log("Enter", i)
-    if(mouseDown) {
+    if (mouseDown) {
       fields[i].status = mouseDownState;
     }
   }
 
-  const doMouseDown = (i:number) => {
+  const doMouseDown = (i: number) => {
     mouseDownState = !fields[i].status;
     fields[i].status = mouseDownState
     mouseDown = true;
@@ -36,22 +37,50 @@
     mouseDown = false
     console.log("Mouse down", mouseDown)
   }
+
+  const doReset = () => {
+    fields = fields.map((it) => {
+      return {...it, status: false}
+    })
+  }
 </script>
 
 <main>
   <h1>Multirange</h1>
 
+  <p>Try to click and drag</p>
+
+  <button on:click={doReset}>Reset</button>
+
+  <h2>Minimalist</h2>
+
   <fieldset>
     {#each fields as {name, status}, i}
       {#if status}
-        <div on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
-          <p>☑ {name}</p>
+        <div on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)} class="on">
+          <p>{name}</p>
         </div>
-        {:else}
+      {:else}
         <div on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
-          <p>☐ {name}</p>
+          <p>{name}</p>
         </div>
-        {/if}
+      {/if}
+    {/each}
+  </fieldset>
+
+  <h2>Checkbox</h2>
+
+  <fieldset>
+    {#each fields as {name, status}, i}
+      {#if status}
+        <div on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)} class="on">
+          <p>☑{name}</p>
+        </div>
+      {:else}
+        <div on:mouseenter={() => doMouseEnter(i)} on:mousedown={() => doMouseDown(i)}>
+          <p>☐{name}</p>
+        </div>
+      {/if}
     {/each}
   </fieldset>
 
@@ -61,14 +90,13 @@
   fieldset > div {
     display: flex;
     user-select: none;
-    background: var(--bg-color);
   }
 
   fieldset > div:hover {
-    border: 2px solid lightblue;
+    background-color: #eef;
   }
 
-  fieldset > div > input {
-    margin: 5px;
+  .on {
+    background-color: #ddf;
   }
 </style>
